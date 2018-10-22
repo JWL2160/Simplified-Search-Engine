@@ -11,3 +11,5 @@ void removeEdge(Graph, Vertex, Vertex);
 
 Graph newGraph(int nV);
 void showGraph(Graph, char **);
+
+int connection(Graph g, int, int);

@@ -78,66 +78,85 @@ int main (){
 		printf("%s has %d incoming links\n", pages[x], number);
 		x++;
 	}
-}
 
-
-/*Graph makegraph(char *pages, int numNodes){
-	//new graph
-	Graph world = newGraph(numNodes);
-	int k = 0;
-	while(k < numNodes){
-		char buf[100];
-		char temp = pages[k];
-		fprintf(stderr,"%s", temp);
-		sprintf(buf, "%s.txt", pages[k]);
-		fprintf(stderr,"send help");
-		FILE *fp;
-		fp = fopen(buf, "r");
-		char outstr[1000];
-		int flag1 = 0;
-		int flag2 = 0;
-		while(fscanf(fp, "%s", outstr) == 1){
-			if(strcmp(outstr, "#start") == 0){
-				flag1 = 1;
-				fprintf(stderr,"flag1 %s, %d\n", pages[k], k);
-			}
-			else if(strcmp(outstr, "Section-1") == 0){
-				flag2 = 1;
-				fprintf(stderr,"flag2 %s, %d\n", pages[k], k);
-			}
-			else if(strcmp(outstr, "#end") == 0){
-				flag1 = 0;
-				fprintf(stderr,"noflag1 %s, %d\n", pages[k], k);
-			}
-			else if(flag1 == 1 && flag2 ==1){
-				//add into graph
-				fprintf(stderr,"enter the beast %s, %d\n", pages[k], k);
-				int j = 0;
-				while(j < numNodes){
-					fprintf(stderr,"is this the crash? %s, %d\n", pages[k], k);
-					char *temp = &pages[j];
-					if(!strcmp(outstr, temp)){
-						//add edge into graph
-						insertEdge(world, k, j, 1); 
-					}
-					j++;
-				}
-			}
-			fprintf(stderr,"inside %s, %d\n", pages[k], k);
-		}
-		fclose(fp);
-		k++;
-		fprintf(stderr,"outside %s, %d\n", pages[k], k);
+	//this be page rank
+	double bpr = 1/i;
+	double *pageranks;
+	pageranks = calloc(i,sizeof(double));
+	int counter5 = 0;
+	while(counter < i){
+		pageranks[counter] = bpr;
+		counter5++;
 	}
-	return world;
+	int iteration = 1;
+	int maxIteration = 30;
+	double diff = 1;
+	while(iteration <= maxIteration && diff > 0){
+		/*int sum1 = 0;
+		int counter = 0;
+		while(counter < webpages->nV){
+			int counter2 = 0;
+			int ino = 0;
+			int iny = 0;
+			int outo = 0;
+			int outy = 0;
+			while(counter2 < webpages->nV){
+				ino = ino + connection(webpages,counter2,counter);
+				if(connection(webpages,iteration,counter2)){
+					int counter3 = 0;
+					while(counter3 < webpages->nV){
+						iny = iny + connection(webpages,counter3,counter2);
+						counter3++;
+					}
+				}
+				outo = outo(
+				counter2++
+			}
+			sum = sum + pagerank[counter]*(ino/iny)*(outo/outy);
+			counter++;
+		}
+		pageranks[counter] = ((1-(0.85))/(webpages->nV))+(0.85)
+		*/
+		int counter6 = 0;
+		while(counter6 < i){
+			int sum = 0;
+			int counter2 = 0;
+			while(counter2 < i){
+				int In1 = 0;
+				int In2 = 0;
+				int Out1 = 0;
+				int Out2 = 0;
+				int counter3 = 0;
+				while(counter3 < i){
+					In1 = In1 + connection(webpages,counter3,counter6);
+					Out1 = Out1 + connection(webpages,counter6,counter3);
+					if(connection(webpages,counter2,counter3)){
+						int counter4 = 0;
+						while(counter4 < i){
+							In2 = In2 + connection(webpages,counter4,counter3);
+							Out2 = Out2 + connection(webpages,counter3,counter4);
+							counter4++;
+						}
+					}
+					counter3++;
+				}
+				sum = pageranks[counter2]*(In1/In2)*(Out1/Out2);
+				counter2++;
+			}
+			diff = pageranks[counter6] - ((1-(0.85))/i)+(0.85)*sum;
+			pageranks[counter6] = ((1-(0.85))/i)+(0.85)*sum;
+			counter6++;
+		}
+		iteration++;
+	}
+	int zounter = 0;
+	while(zounter < i){
+		printf("%s has pagerank of %lf\n", pages[zounter], pageranks[zounter]);
+		zounter++;
+	}
 }
-*/
+
+
 
 
 //ok this is the page rank algorithm
-/*void PageRankW(d, diffPR, maxIterations){
-	int iteration = 0;
-	diff = diffPR;
-	
-}
-*/

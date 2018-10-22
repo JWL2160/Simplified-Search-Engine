@@ -65,16 +65,23 @@ void showGraph(Graph g, char **names){
 	assert(g != NULL);
 	printf("#vertices=%d, #edges=%d\n\n",g->nV,g->nE);
 	int v = 0;
-	int w = 0;
 	while( v < g->nV){
 		printf("%d %s\n",v,names[v]);
+		int w = 0;
 		while( w < g->nV){
 			if(g->edges[v][w]){
-				printf("\t%s (%d)\n",names[w],g->edges[v][w]);
+				printf("%s is %d\n",names[w],g->edges[v][w]);
 			}
 			w++;
 		}
 		printf("\n");
 		v++;
 	}
+}
+
+int connection(Graph g, int x, int y){
+	if(g->edges[x][y]){
+		return 1;
+	}
+	return 0;
 }
