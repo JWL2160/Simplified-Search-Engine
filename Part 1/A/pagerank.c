@@ -9,37 +9,87 @@ int main (){
 	char str1[1000], str2[1000];
 	//The code below is for counting how many links are in the file
 	int counter = 0;
-	FILE *fp;
-	fp = fopen("collection.txt", "r");
+	FILE *fp1;
+	fp1 = fopen("collection.txt", "r");
 	int i = 0;
-	while(fscanf(fp, "%s", str1) == 1){
+	while(fscanf(fp1, "%s", str1) == 1){
 		i++;
 	}
 	//the array of strings
 	char *pages[i];
-	fclose(fp);
+	//pages = calloc(i, sizeof(str1));
+	fclose(fp1);
 	//loading the strings into the array
-	fp = fopen("collection.txt", "r");
-	i = 0;
-	while(fscanf(fp, "%s", str1) == 1){
-		pages[i] = strdup(str1);
-		printf("%s, %s, %d\n", pages[i], &str1, i);
-		i++;
+	FILE *fp2;
+	fp2 = fopen("collection.txt", "r");
+	int j = 0;
+	while(fscanf(fp2, "%s", str1) == 1){
+		pages[j] = strdup(str1);
+		printf("%s, %s, %d\n", pages[j], &str1, j);
+		j++;
 	}
-	fclose(fp);
-	Graph webpages = makegraph(*pages, i);
+	fclose(fp2);
+	//Graph webpages = makegraph(*pages, i);
+	Graph webpages = newGraph(i);
+	int k = 0;
+	while(k < i){
+		char buf[100];
+		snprintf(buf, 100, "%s.txt", pages[k]);
+		FILE *fp3;
+		fp3 = fopen(buf, "r");
+		char outstr[1000];
+		int flag1 = 0;
+		int flag2 = 0;
+		while(fscanf(fp3, "%s", outstr) == 1){
+			if(strcmp(outstr, "#start") == 0){
+				flag1 = 1;
+			}
+			else if(strcmp(outstr, "Section-1") == 0){
+				flag2 = 1;
+			}
+			else if(strcmp(outstr, "#end") == 0){
+				flag1 = 0;
+			}
+			else if(flag1 == 1 && flag2 == 1){
+				int l = 0;
+				while(l < i){
+					char *temp = pages[l];
+					if(strcmp(outstr, temp) == 0){
+						insertEdge(webpages, k, l, 1);
+						//webpages->edges[k][l] = 1;
+						//webpages->nE++;
+					}
+				l++;
+				}
+			}
+		}
+		fclose(fp3);
+		k++;
+	}
 	showGraph(webpages, pages);
+	int x = 0;
+	while(x<i){
+		int y = 0;
+		int number = 0;
+		while(y<i){
+			number = number + connection(webpages, y, x);
+			y++;
+		}
+		printf("%s has %d incoming links\n", pages[x], number);
+		x++;
+	}
 }
 
 
-Graph makegraph(char *pages, int numNodes){
+/*Graph makegraph(char *pages, int numNodes){
 	//new graph
 	Graph world = newGraph(numNodes);
 	int k = 0;
 	while(k < numNodes){
 		char buf[100];
-		
-		snprintf(buf, sizeof(buf), "%s.txt", pages[k]);
+		char temp = pages[k];
+		fprintf(stderr,"%s", temp);
+		sprintf(buf, "%s.txt", pages[k]);
 		fprintf(stderr,"send help");
 		FILE *fp;
 		fp = fopen(buf, "r");
@@ -81,3 +131,13 @@ Graph makegraph(char *pages, int numNodes){
 	}
 	return world;
 }
+*/
+
+
+//ok this is the page rank algorithm
+/*void PageRankW(d, diffPR, maxIterations){
+	int iteration = 0;
+	diff = diffPR;
+	
+}
+*/
