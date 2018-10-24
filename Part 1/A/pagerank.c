@@ -3,9 +3,11 @@
 #include <string.h>
 #include "graph.h"
 
-Graph makegraph(char *pages, int numNodes);
+double inLink (int baselink, int original, int nV, Graph g);
+double outLink (int baselink, int original, int nV, Graph g);
 
-int main (){
+
+int main (int argc, char *argv[]){
 	char str1[1000], str2[1000];
 	//The code below is for counting how many links are in the file
 	int counter = 0;
@@ -25,7 +27,7 @@ int main (){
 	int j = 0;
 	while(fscanf(fp2, "%s", str1) == 1){
 		pages[j] = strdup(str1);
-		printf("%s, %s, %d\n", pages[j], &str1, j);
+		//printf("%s, %s, %d\n", pages[j], &str1, j);
 		j++;
 	}
 	fclose(fp2);
@@ -80,72 +82,36 @@ int main (){
 	}
 
 	//this be page rank
-	double bpr = 1/i;
-	double *pageranks;
+	double bpr = (1/(double)i);
+	double *pageranks, *oldpageranks;
 	pageranks = calloc(i,sizeof(double));
+	oldpageranks = calloc(i,sizeof(double));
 	int counter5 = 0;
-	while(counter < i){
-		pageranks[counter] = bpr;
+	while(counter5 < i){
+		oldpageranks[counter5] = bpr;
+		pageranks[counter5] = bpr;
 		counter5++;
 	}
 	int iteration = 1;
-	int maxIteration = 30;
-	double diff = 1;
-	while(iteration <= maxIteration && diff > 0){
-		/*int sum1 = 0;
-		int counter = 0;
-		while(counter < webpages->nV){
-			int counter2 = 0;
-			int ino = 0;
-			int iny = 0;
-			int outo = 0;
-			int outy = 0;
-			while(counter2 < webpages->nV){
-				ino = ino + connection(webpages,counter2,counter);
-				if(connection(webpages,iteration,counter2)){
-					int counter3 = 0;
-					while(counter3 < webpages->nV){
-						iny = iny + connection(webpages,counter3,counter2);
-						counter3++;
-					}
-				}
-				outo = outo(
-				counter2++
+	double d = atof(argv[1]);
+	double diff = atof(argv[2]);
+	while(iteration < (int)argv[3] && diff >= atof(argv[2])){
+		printf("%s iteration", iteration);
+		int a = 0;
+		while(a < i){
+			int b = 0;
+			double sum = 0;
+			while(b < i){
+				sum = sum + oldpageranks[b]*inLink(a,1,i,webpages)/inLink(b,0,i,webpages)*outLink(a,1,i,webpages)/outLink(b,0,i,webpages);
+				b++;
 			}
-			sum = sum + pagerank[counter]*(ino/iny)*(outo/outy);
-			counter++;
+			pageranks[a] =((1-d)/i) + d* sum;
+			diff = pageranks[a]-oldpageranks[a];
+			a++;
 		}
-		pageranks[counter] = ((1-(0.85))/(webpages->nV))+(0.85)
-		*/
-		int counter6 = 0;
-		while(counter6 < i){
-			int sum = 0;
-			int counter2 = 0;
-			while(counter2 < i){
-				int In1 = 0;
-				int In2 = 0;
-				int Out1 = 0;
-				int Out2 = 0;
-				int counter3 = 0;
-				while(counter3 < i){
-					In1 = In1 + connection(webpages,counter3,counter6);
-					Out1 = Out1 + connection(webpages,counter6,counter3);
-					if(connection(webpages,counter2,counter3)){
-						int counter4 = 0;
-						while(counter4 < i){
-							In2 = In2 + connection(webpages,counter4,counter3);
-							Out2 = Out2 + connection(webpages,counter3,counter4);
-							counter4++;
-						}
-					}
-					counter3++;
-				}
-				sum = pageranks[counter2]*(In1/In2)*(Out1/Out2);
-				counter2++;
-			}
-			diff = pageranks[counter6] - ((1-(0.85))/i)+(0.85)*sum;
-			pageranks[counter6] = ((1-(0.85))/i)+(0.85)*sum;
-			counter6++;
+		int c = 0;
+		while(c < i){
+			oldpageranks[c] = pageranks[c];
 		}
 		iteration++;
 	}
@@ -160,3 +126,64 @@ int main (){
 
 
 //ok this is the page rank algorithm
+double inLink(int baselink, int original, int nV, Graph g){
+	double numLinks = 0;
+	if(original == 0){
+		int counter = 0;
+		while(counter < nV){
+			if(connection(g, baselink, counter)){
+				int counter2 = 0;
+				while(counter2 < nV){
+					numLinks = numLinks + (double)connection(g, counter2, counter);
+					counter2++;
+				}
+			}
+			counter++;
+		}
+		return numLinks;
+	}
+	else if(original == 1){
+		int counter = 0;
+		while(counter < nV){
+			numLinks = numLinks + (double)connection(g, counter, baselink);
+			counter++;
+		}
+		return numLinks;
+	}
+	else
+		return 0;
+
+}
+
+double outLink (int baselink, int original, int nV, Graph g){
+	double numLinks;
+	if(original == 0){
+		int counter = 0;
+		while(counter < nV){
+			if(connection(g, baselink, counter)){
+				int counter2 = 0;
+				while(counter2 < nV){
+					numLinks = numLinks + (double)connection(g, counter, counter2);
+					counter2++;
+				}
+			}
+			counter++;
+		}
+		if(numLinks == 0){
+			numLinks = 0.5;
+		}
+		return numLinks;
+	}
+	else if(original == 1){
+		int counter = 0;
+		while(counter < nV){
+			numLinks = numLinks + (double)connection(g, baselink, counter);
+			counter++;
+		}
+		return numLinks;
+	}
+	else
+		return 0;
+
+
+}
