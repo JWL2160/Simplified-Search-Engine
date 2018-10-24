@@ -8,9 +8,8 @@ double outLink (int baselink, int original, int nV, Graph g);
 
 
 int main (int argc, char *argv[]){
-	char str1[1000], str2[1000];
+	char str1[1000];
 	//The code below is for counting how many links are in the file
-	int counter = 0;
 	FILE *fp1;
 	fp1 = fopen("collection.txt", "r");
 	int i = 0;
@@ -95,23 +94,28 @@ int main (int argc, char *argv[]){
 	int iteration = 1;
 	double d = atof(argv[1]);
 	double diff = atof(argv[2]);
-	while(iteration < (int)argv[3] && diff >= atof(argv[2])){
-		printf("%s iteration", iteration);
+	while(iteration < atoi(argv[3]) && diff >= atof(argv[2])){
+		printf("%d iteration\n", iteration);
 		int a = 0;
 		while(a < i){
 			int b = 0;
 			double sum = 0;
 			while(b < i){
-				sum = sum + oldpageranks[b]*inLink(a,1,i,webpages)/inLink(b,0,i,webpages)*outLink(a,1,i,webpages)/outLink(b,0,i,webpages);
+				if(b!=a && connection(webpages, b, a)){
+					sum = sum + oldpageranks[b]*inLink(a,1,i,webpages)/inLink(b,0,i,webpages)*outLink(a,1,i,webpages)/outLink(b,0,i,webpages);
+					printf("in1 = %lf\n in2 = %lf\n out1 = %lf\n out2 = %lf\n", inLink(a,1,i,webpages), inLink(b,0,i,webpages), outLink(a,1,i,webpages), outLink(b,0,i,webpages));
+					printf("sum = %lf\n", sum);
+				}
 				b++;
 			}
 			pageranks[a] =((1-d)/i) + d* sum;
-			diff = pageranks[a]-oldpageranks[a];
+			diff = abs(pageranks[a]-oldpageranks[a]);
 			a++;
 		}
 		int c = 0;
 		while(c < i){
 			oldpageranks[c] = pageranks[c];
+			c++;
 		}
 		iteration++;
 	}
@@ -120,6 +124,7 @@ int main (int argc, char *argv[]){
 		printf("%s has pagerank of %lf\n", pages[zounter], pageranks[zounter]);
 		zounter++;
 	}
+	return 0;
 }
 
 
